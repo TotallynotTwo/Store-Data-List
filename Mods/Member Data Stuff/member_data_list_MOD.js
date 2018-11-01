@@ -68,7 +68,7 @@ module.exports = {
 	// are also the names of the fields stored in the action's JSON data.
 	//---------------------------------------------------------------------
 
-	fields: ["sort", "start", "middle", "end", "getresults", "dataName", "varName2", "storage"],
+	fields: ["numbefst2", "numbefst", "numbefstselect", "sort", "start", "middle", "end", "getresults", "dataName", "varName2", "storage"],
 
 	//---------------------------------------------------------------------
 	// Command HTML
@@ -97,7 +97,22 @@ module.exports = {
 		<input id="dataName" class="round" type="text">
 	</div><br><br><br>
 	<span>
+	
 </div>
+      Number before start
+<select id="numbefstselect" class="round" style="width:33%" onchange="glob.onChange1(this)">
+<option value="1" >No</option>
+<option value="2"selected>Yes</option>
+</select> 
+<br>
+
+
+<div id="numbefst" style=" width: 80%; display: none;">
+Char after Number:<br>
+<input id="numbefst2" class="round" type="text" value=")">
+</div>
+<br>
+
 	Start:
     
 	<select id="start" class="round" style="width:33%">
@@ -165,8 +180,21 @@ module.exports = {
 			glob,
 			document
 		} = this;
-
-
+		glob.onChange1 = function(event) {
+			const value = parseInt(event.value);
+			const dom = document.getElementById('numbefst');
+			
+			
+			if(value == 1) {
+				dom.style.display = 'none';
+				
+			} else if(value == 2) {
+				
+				dom.style.display = null;
+			}
+			
+		}
+		glob.onChange1(document.getElementById('numbefstselect'));
 	},
 
 	//---------------------------------------------------------------------
@@ -187,6 +215,8 @@ module.exports = {
 		const varName2 = this.evalMessage(data.varName2, cache);
 		const st = this.evalMessage(data.start, cache)
 		const mid = this.evalMessage(data.middle, cache)
+		const selectionsnum = parseInt(data.numbefstselect);
+		
 		const en = this.evalMessage(data.end, cache)
 		const sort = parseInt(data.sort);
 
@@ -211,6 +241,7 @@ module.exports = {
 			var list2 = []
 			var list = []
 			var list4 = []
+			var list5 = []
 
 			if (val !== undefined) {
 				var file = JSON.parse(file)
@@ -228,7 +259,7 @@ module.exports = {
 					for (var i = 0; i < result.length; i++) {
 
 						var result2 = JSONPath({
-							path: '$.' + result[i] + '.' + dataName,
+							path: '$.' + result[i]  + dataName,
 							json: file
 						});
 
@@ -267,13 +298,14 @@ module.exports = {
 							result = list
 							break;
 					}
+
 					var result2 = JSON.stringify(result)
 
 					var getres = parseInt(this.evalMessage(data.getresults, cache));
 
 
 					if (!getres) {
-
+                        console.log("all")
 						getres = result.length;
 					}
 
@@ -303,15 +335,27 @@ module.exports = {
 							var result = res
 							var en2 = eval(en);
 							var st2 = eval(st);
-
-
-							list2.push(st2 + middle + en2 + '\n')
+                            list5.push("easter egg :eyes:")
+							switch(selectionsnum){
+								case 1:
+								console.log("1")
+							
+								list2.push(st2 + middle + en2 + '\n')
+								break;
+								case 2:
+								console.log("2")
+								var num = list5.length;
+								var numbef = this.evalMessage(data.numbefst2, cache)
+								list2.push(num + numbef + " " + st2 + middle + en2 + '\n')
+								break;
+							}
+							
 						} catch (err) {
 							console.log(err)
 						}
 
 
-
+                    
 
 						list4 = list2.join('')
 
