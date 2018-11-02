@@ -305,7 +305,7 @@ Char after Number:<br>
 
 
 					if (!getres) {
-                        console.log("all")
+                        
 						getres = result.length;
 					}
 
@@ -338,12 +338,12 @@ Char after Number:<br>
                             list5.push("easter egg :eyes:")
 							switch(selectionsnum){
 								case 1:
-								console.log("1")
+								
 							
 								list2.push(st2 + middle + en2 + '\n')
 								break;
 								case 2:
-								console.log("2")
+								
 								var num = list5.length;
 								var numbef = this.evalMessage(data.numbefst2, cache)
 								list2.push(num + numbef + " " + st2 + middle + en2 + '\n')
