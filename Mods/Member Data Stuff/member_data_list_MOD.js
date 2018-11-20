@@ -68,7 +68,7 @@ module.exports = {
 	// are also the names of the fields stored in the action's JSON data.
 	//---------------------------------------------------------------------
 
-	fields: ["numbefst2", "numbefst", "numbefstselect", "sort", "start", "middle", "end", "getresults", "dataName", "varName2", "storage"],
+	fields: ["debu", "numbefst2", "numbefst", "numbefstselect", "sort", "start", "middle", "end", "getresults", "dataName", "varName2", "storage"],
 
 	//---------------------------------------------------------------------
 	// Command HTML
@@ -95,7 +95,7 @@ module.exports = {
 	<div style="float: left; width: 50%;">
 		Data Name:<br>
 		<input id="dataName" class="round" type="text">
-	</div><br><br><br>
+	</div>
 	<span>
 	
 </div>
@@ -164,6 +164,12 @@ Char after Number:<br>
 	<input id="varName2" class="round" type="text"><br>
 </div>
 </div>
+<select id="debu" class="round" style="width: 90%;">
+<option value="0" selected>Debug</option>
+<option value="1" selected>Don't Debug</option>
+
+</select><br>
+</div>
 </html>`
 	},
 
@@ -216,16 +222,18 @@ Char after Number:<br>
 		const st = this.evalMessage(data.start, cache)
 		const mid = this.evalMessage(data.middle, cache)
 		const selectionsnum = parseInt(data.numbefstselect);
-		
+
 		const en = this.evalMessage(data.end, cache)
 		const sort = parseInt(data.sort);
+		const debug = parseInt(data.debu);
+		const WrexMODS = this.getWrexMods(); // as always.
+		
 
-
-		var Discord = require('discord.js');
+		var Discord = WrexMODS.require('discord.js');
 		var client = new Discord.Client();
 		const {
 			JSONPath
-		} = require('jsonpath-plus');
+		} = WrexMODS.require('jsonpath-plus');
 		fs = require('fs')
 		var file = fs.readFileSync("./data/players.json", 'utf8');
 
@@ -259,14 +267,16 @@ Char after Number:<br>
 					for (var i = 0; i < result.length; i++) {
 
 						var result2 = JSONPath({
-							path: '$.' + result[i]  + dataName,
+							path: '$.' + result[i] + dataName,
 							json: file
 						});
 
 						try {
+							
 							var user = msg.guild.members.get(result[i]);
 
 							tag = user.user.tag
+
 							var name2 = "'" + "name" + "'";
 							var id = "'" + "id" + "'";
 							var tag2 = "" + tag + "";
@@ -280,7 +290,14 @@ Char after Number:<br>
 
 
 						} catch (err) {
-							console.log(err)
+							switch (debug) {
+								case 0:
+								console.log(err)
+								break;
+								case 1:
+								break;
+							} 
+							
 						}
 					}
 					switch (sort) {
@@ -305,7 +322,7 @@ Char after Number:<br>
 
 
 					if (!getres) {
-                        
+
 						getres = result.length;
 					}
 
@@ -335,27 +352,33 @@ Char after Number:<br>
 							var result = res
 							var en2 = eval(en);
 							var st2 = eval(st);
-                            list5.push("easter egg :eyes:")
-							switch(selectionsnum){
+							list5.push("easter egg :eyes:")
+							switch (selectionsnum) {
 								case 1:
-								
-							
-								list2.push(st2 + middle + en2 + '\n')
-								break;
+
+
+									list2.push(st2 + middle + en2 + '\n')
+									break;
 								case 2:
-								
-								var num = list5.length;
-								var numbef = this.evalMessage(data.numbefst2, cache)
-								list2.push(num + numbef + " " + st2 + middle + en2 + '\n')
-								break;
+
+									var num = list5.length;
+									var numbef = this.evalMessage(data.numbefst2, cache)
+									list2.push(num + numbef + " " + st2 + middle + en2 + '\n')
+									break;
 							}
-							
+
 						} catch (err) {
-							console.log(err)
+							switch (debug) {
+								case 0:
+								console.log(err)
+								break;
+								case 1:
+								break;
+							} 
 						}
 
 
-                    
+
 
 						list4 = list2.join('')
 
@@ -364,7 +387,13 @@ Char after Number:<br>
 					_this.storeValue(list4, storage, varName2, cache)
 					_this.callNextAction(cache);
 				} catch (err) {
-					console.log(err)
+					switch (debug) {
+						case 0:
+						console.log(err)
+						break;
+						case 1:
+						break;
+					} 
 				}
 
 			}
