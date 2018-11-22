@@ -230,6 +230,7 @@ Char after Number:<br>
 		
 
 		var Discord = WrexMODS.require('discord.js');
+		var fastsort = WrexMODS.require('fast-sort');
 		var client = new Discord.Client();
 		const {
 			JSONPath
@@ -302,20 +303,17 @@ Char after Number:<br>
 					}
 					switch (sort) {
 						case 1:
-							result = list.sort(function (a, b) {
-								return parseInt(b.name2) > parseInt(a.name2)
-							})
+							result = fastsort(list).desc(u => parseInt(u.name2));
 							break;
 						case 2:
-							result = list.sort(function (a, b) {
-								return parseInt(a.name2) > parseInt(b.name2)
-							})
+
+							result = fastsort(list).asc(u => parseInt(u.name2));
 							break;
 						case 0:
 							result = list
 							break;
 					}
-
+                   console.log(result)
 					var result2 = JSON.stringify(result)
 
 					var getres = parseInt(this.evalMessage(data.getresults, cache));
